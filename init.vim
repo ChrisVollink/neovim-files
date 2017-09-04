@@ -14,6 +14,10 @@ if dein#load_state(expand('~/.config/nvim/bundle'))
   call dein#add('SirVer/ultisnips')
   call dein#add('scrooloose/nerdtree')
 
+  " JS stuff
+  call dein#add('carlitux/deoplete-ternjs', {'build': 'npm install -g tern'})
+  call dein#add('othree/jspc.vim')
+
   call dein#end()
   call dein#save_state()
 endif
@@ -49,3 +53,16 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
 " Enable Deoplete
 let g:deoplete#enable_at_startup = 1
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = ['tern#Complete', 'jspc#omni']
+
+let g:deoplete#sources#ternjs#case_insensitive = 1
+
+set completeopt=longest,menuone
+let g:deoplete#sources = {}
+let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'ternjs']
